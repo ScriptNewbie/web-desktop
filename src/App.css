@@ -1,0 +1,113 @@
+#start {
+  height: 100%;
+  width: 97px;
+  background-color: rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+}
+
+#start:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+#bar {
+  color: white;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  background-color: dodgerblue;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  font-family: AnonymousPro;
+  z-index: 900;
+}
+
+@font-face {
+  font-family: AnonymousPro;
+  src: url("./fonts/AnonymousPro.ttf");
+}
+
+#menu {
+  position: absolute;
+  bottom: 60px;
+  width: 400px;
+  max-width: 100% !important;
+  max-height: calc(100% - 60px) !important;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  background-color: rgb(30, 120, 200);
+  box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 150ms 1;
+  z-index: 800;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.shake {
+  animation: shake 10ms 20;
+}
+
+@keyframes shake {
+  0% {
+    margin-left: -5px;
+  }
+  100% {
+    margin-left: 5px;
+  }
+}
+
+#desktop {
+  position: absolute;
+  height: calc(100% - 60px);
+  width: 100%;
+  background-image: url("./wallpapers/bliss.jpg");
+  background-size: 100% 100%;
+}
+
+#desktopIconSpace {
+  position: absolute;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  max-height: calc(100% - 60px);
+}
+
+#desktopIcon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 90px;
+  margin: 5px;
+  padding: 5px;
+  border-radius: 10px;
+}
+
+#desktopIcon:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+#menuEntry {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 10px 20px 10px 20px;
+}
+
+#menuEntry:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+#barIcon:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+}
