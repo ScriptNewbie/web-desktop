@@ -7,7 +7,10 @@ function Weather() {
   const [weather, setWeather] = useState("Słonecznie");
   const [icon, setIcon] = useState("10d");
   const [osmAttribution, setOsmAttribution] = useState("");
+
+  //API KEY IS STILL BUNDLED SO PROCEED WITH CAUSION
   const key = process.env.REACT_APP_API_KEY;
+
   const geoCode = async (city) => {
     const query =
       "https://nominatim.openstreetmap.org/search?format=json&limit=1&q=" +
