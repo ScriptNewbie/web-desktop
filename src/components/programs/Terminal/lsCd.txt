@@ -1,0 +1,26 @@
+const ls = (lsPath) => {
+    if (typeof lsPath === "undefined") return print(pathContent.join(" "));
+    if (!lsPath.startsWith("/")) {
+      lsPath = path + lsPath;
+    }
+    const { pathExists, content } = Filesystem.getPathContent(
+      filesystem,
+      lsPath
+    );
+    let output = "Path does not exist!";
+    if (pathExists) {
+      output = Object.keys(content).join(" ");
+    }
+    print(output);
+  };
+
+  const cd = (navigatePath) => {
+    if (!navigatePath.startsWith("/")) {
+      navigatePath = path + navigatePath;
+    }
+    const { pathExists } = Filesystem.getPathContent(filesystem, navigatePath);
+    if (pathExists) {
+      return setPath(navigatePath);
+    }
+    print("This path does not exist!");
+  };

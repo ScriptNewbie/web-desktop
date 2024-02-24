@@ -18,7 +18,10 @@ class Ping {
 
     this.onStart = (args) => {
       const ip = randomIp();
-      if (!args[0]) return output("Specify ping destination!");
+      if (!args[0]) {
+        output("Specify ping destination!");
+        return exit();
+      }
       let pings = -1;
       output("PING " + args[0] + " (" + ip + "): 56 data bytes");
       const ping = setInterval(() => {

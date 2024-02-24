@@ -3,6 +3,7 @@ import Filesystem from "../../../tools/filesystem";
 import Neofetch from "./neofetch";
 import Ping from "./ping";
 import TermOutput from "./TermOutput";
+import Bash from "./bash";
 import Node from "./node";
 import Help from "./help";
 
@@ -23,71 +24,6 @@ function Terminal({ setFilesystem, filesystem, onTop: currentOnTop, close }) {
       <TermOutput>{text}</TermOutput>,
     ]);
   };
-
-  const ls = (lsPath) => {
-    if (typeof lsPath === "undefined") return print(pathContent.join(" "));
-    if (!lsPath.startsWith("/")) {
-      lsPath = path + lsPath;
-    }
-    const { pathExists, content } = Filesystem.getPathContent(
-      filesystem,
-      lsPath
-    );
-    let output = "Path does not exist!";
-    if (pathExists) {
-      output = Object.keys(content).join(" ");
-    }
-    print(output);
-  };
-
-  const cd = (navigatePath) => {
-    if (!navigatePath.startsWith("/")) {
-      navigatePath = path + navigatePath;
-    }
-    const { pathExists } = Filesystem.getPathContent(filesystem, navigatePath);
-    if (pathExists) {
-      return setPath(navigatePath);
-    }
-    print("This path does not exist!");
-  };
-
-  const ping = new Ping(print, defaultProgramExit);
-  const node = new Node(print, defaultProgramExit);
-  const neofetch = new Neofetch(print, defaultProgramExit);
-  const help = new Help(print, defaultProgramExit);
-
-  const programs = { ping, node, neofetch, help };
-
-  class Bash {
-    constructor(output, exit) {
-      this.prompt = "jack@zettawhit " + getDirName(path) + " #";
-      this.promptEnabled = true;
-      this.commandInterpreter = (command) => {
-        if (!command) return print("");
-        if (command === "clear") return setBashHistory([]);
-        if (command === "exit") return exit();
-        if (command === "ls") return ls();
-        if (command.startsWith("cd")) return cd(command.split(" ")[1] || "/");
-        const executedLine = command.split(" ");
-        if (executedLine[0] in programs)
-          return startProgram(programs[executedLine[0]], executedLine.slice(1));
-
-        print("Command not found: " + executedLine[0]);
-      };
-
-      this.onStart = (args) => {};
-    }
-  }
-  const bash = new Bash(print, close);
-
-  const [runningProgram, setRunningProgram] = useState();
-  function startProgram(program, args) {
-    setRunningProgram(program);
-    program.onStart(args);
-  }
-  function defaultProgramExit() {
-    setRunningProgram(null);
-  }
 
   const [prompt, setPrompt] = useState("");
   const [promptToExecute, setPromptToExecute] = useState();
@@ -166,7 +102,27 @@ function Terminal({ setFilesystem, filesystem, onTop: currentOnTop, close }) {
     };
   }, []);
 
-  const running = runningProgram || bash;
+  const [runningProgram, setRunningProgram] = useState();
+  const defaultProgramExit = () => {
+    setRunningProgram(null);
+  };
+  const ping = new Ping(print, defaultProgramExit);
+  const node = new Node(print, defaultProgramExit);
+  const neofetch = new Neofetch(print, defaultProgramExit);
+  const help = new Help(print, defaultProgramExit);
+
+  const programs = { ping, node, neofetch, help };
+
+  const startProgram = (program, args) => {
+    setRunningProgram(program);
+    program.onStart(args);
+  };
+
+  const running =
+    runningProgram ||
+    new Bash(print, close, programs, startProgram, getDirName(path), () => {
+      setBashHistory([]);
+    });
 
   return (
     <div
