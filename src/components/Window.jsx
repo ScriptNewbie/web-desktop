@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 const windowInnerPadding = 5;
 function Window({
   onTop,
-  children,
   changeOnTopRunning,
   pid,
   closeRunning,

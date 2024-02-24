@@ -8,7 +8,7 @@ function Weather() {
   const [icon, setIcon] = useState("10d");
   const [osmAttribution, setOsmAttribution] = useState("");
 
-  //API KEY IS STILL BUNDLED SO PROCEED WITH CAUSION
+  //API KEY IS STILL BUNDLED SO PROCEED WITH CAUTION
   const key = process.env.REACT_APP_API_KEY;
 
   const geoCode = async (city) => {

@@ -1,4 +1,10 @@
-const asciiart = `
+class Neofetch {
+  constructor(output, exit) {
+    this.prompt = "";
+    this.promptEnabled = false;
+    this.commandInterpreter = (command) => {};
+    this.onStart = (args) => {
+      const asciiart = `
                                jack@zettawhit.com
          ,----,                _______________________
        .'   .\`|        .---.
@@ -15,9 +21,10 @@ const asciiart = `
 ;   |  .'        \\   \\ ;
 \`---'             '---"
 `;
+      output(asciiart);
+      exit();
+    };
+  }
+}
 
-const neofetch = (setBashHistory) => {
-  setBashHistory((bashHistory) => [...bashHistory, <pre>{asciiart}</pre>]);
-};
-
-export default neofetch;
+export default Neofetch;

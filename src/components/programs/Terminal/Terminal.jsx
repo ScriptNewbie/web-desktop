@@ -1,56 +1,27 @@
 import React, { useState, useRef, useEffect } from "react";
 import Filesystem from "../../../tools/filesystem";
-import neofetch from "./neofetch";
-import ping from "./ping";
+import Neofetch from "./neofetch";
+import Ping from "./ping";
 import TermOutput from "./TermOutput";
-import startNode from "./node";
+import Node from "./node";
+import Help from "./help";
 
 function Terminal({ setFilesystem, filesystem, onTop: currentOnTop, close }) {
   const onTop = useRef(currentOnTop);
-  const [promptEnabled, setPromptEnabled] = useState(true);
   const [path, setPath] = useState("/home/");
   const [bashHistory, setBashHistory] = useState([]);
   const pathContent = Object.keys(
     Filesystem.getPathContent(filesystem, path).content
   );
-
-  console.log(path);
-
   const getDirName = (path) => {
     return Filesystem.parseTree(path).pop() || "/";
   };
-
-  const [prompt, setPrompt] = useState("");
-  const [promptText, setPromptText] = useState(
-    "jack@zettawhit " + getDirName(path) + " #"
-  );
-  const [promptToExecute, setPromptToExecute] = useState();
-  const promptContainer = useRef(null);
-  const [promptCursorPosition, setPromptCursorPosition] = useState(0);
-  const promptCursorPositionRef = useRef(promptCursorPosition);
-
-  useEffect(() => {
-    if (promptCursorPosition > prompt.length)
-      setPromptCursorPosition(prompt.length);
-    if (promptCursorPosition < 0) setPromptCursorPosition(0);
-    promptCursorPositionRef.current = promptCursorPosition;
-  }, [promptCursorPosition, prompt]);
 
   const print = (text) => {
     setBashHistory((bashHistory) => [
       ...bashHistory,
       <TermOutput>{text}</TermOutput>,
     ]);
-  };
-
-  const runNode = () => {
-    startNode({
-      print,
-      setPromptText,
-      running,
-      promptText,
-      execCommand,
-    });
   };
 
   const ls = (lsPath) => {
@@ -75,42 +46,61 @@ function Terminal({ setFilesystem, filesystem, onTop: currentOnTop, close }) {
     }
     const { pathExists } = Filesystem.getPathContent(filesystem, navigatePath);
     if (pathExists) {
-      setPromptText("jack@zettawhit " + getDirName(navigatePath) + " #");
       return setPath(navigatePath);
     }
     print("This path does not exist!");
   };
 
-  const help = () => {
-    print("Available commands:");
-    print("   -exit\t - closes terminal");
-    print("   -clear\t - clears terminal");
-    print("   -ping\t - checks the connection to given host");
-    print("   -node\t - runs JS code");
-    print("   -neofetch\t - prints system specyfication");
-  };
+  const ping = new Ping(print, defaultProgramExit);
+  const node = new Node(print, defaultProgramExit);
+  const neofetch = new Neofetch(print, defaultProgramExit);
+  const help = new Help(print, defaultProgramExit);
 
-  const execCommand = (prompt) => {
-    if (typeof prompt === "undefined" || prompt === "") return;
-    const words = prompt.split(" ");
-    prompt = words[0];
-    if (prompt === "neofetch") return neofetch(setBashHistory);
-    if (prompt === "clear") return setBashHistory([]);
-    if (prompt === "ping") return ping(setPromptEnabled, print, words);
-    if (prompt === "node") return runNode();
-    if (prompt === "help") return help();
-    if (prompt === "exit") return close();
-    if (prompt === "pwd") return print(path);
-    if (prompt === "ls") return ls(words[1]);
-    if (prompt === "cd") return cd(words[1]);
-    print(
-      "Command " +
-        prompt +
-        ' does not exist!\nType "help" to see available commands!'
-    );
-  };
+  const programs = { ping, node, neofetch, help };
 
-  const running = useRef({ name: "bash", function: execCommand });
+  class Bash {
+    constructor(output, exit) {
+      this.prompt = "jack@zettawhit " + getDirName(path) + " #";
+      this.promptEnabled = true;
+      this.commandInterpreter = (command) => {
+        if (!command) return print("");
+        if (command === "clear") return setBashHistory([]);
+        if (command === "exit") return exit();
+        if (command === "ls") return ls();
+        if (command.startsWith("cd")) return cd(command.split(" ")[1] || "/");
+        const executedLine = command.split(" ");
+        if (executedLine[0] in programs)
+          return startProgram(programs[executedLine[0]], executedLine.slice(1));
+
+        print("Command not found: " + executedLine[0]);
+      };
+
+      this.onStart = (args) => {};
+    }
+  }
+  const bash = new Bash(print, close);
+
+  const [runningProgram, setRunningProgram] = useState();
+  function startProgram(program, args) {
+    setRunningProgram(program);
+    program.onStart(args);
+  }
+  function defaultProgramExit() {
+    setRunningProgram(null);
+  }
+
+  const [prompt, setPrompt] = useState("");
+  const [promptToExecute, setPromptToExecute] = useState();
+  const promptContainer = useRef(null);
+  const [promptCursorPosition, setPromptCursorPosition] = useState(0);
+  const promptCursorPositionRef = useRef(promptCursorPosition);
+
+  useEffect(() => {
+    if (promptCursorPosition > prompt.length)
+      setPromptCursorPosition(prompt.length);
+    if (promptCursorPosition < 0) setPromptCursorPosition(0);
+    promptCursorPositionRef.current = promptCursorPosition;
+  }, [promptCursorPosition, prompt]);
 
   const handleButton = (e) => {
     if (onTop.current) {
@@ -157,15 +147,14 @@ function Terminal({ setFilesystem, filesystem, onTop: currentOnTop, close }) {
     if (typeof promptToExecute !== "undefined") {
       setBashHistory((bashHistory) => [
         ...bashHistory,
-        <TermOutput>{promptText + " " + promptToExecute}</TermOutput>,
+        <TermOutput>{running.prompt + " " + promptToExecute}</TermOutput>,
       ]);
-      running.current.function(promptToExecute);
+      running.commandInterpreter(promptToExecute);
     }
     setPromptToExecute();
   }, [promptToExecute]);
 
   useEffect(() => {
-    if (running.current.name === "bash") running.current.function = execCommand;
     const div = promptContainer.current;
     div.scrollTop = div.scrollHeight;
   });
@@ -176,6 +165,8 @@ function Terminal({ setFilesystem, filesystem, onTop: currentOnTop, close }) {
       document.removeEventListener("keydown", handleButton);
     };
   }, []);
+
+  const running = runningProgram || bash;
 
   return (
     <div
@@ -206,14 +197,14 @@ function Terminal({ setFilesystem, filesystem, onTop: currentOnTop, close }) {
         <div key={i}>{otp}</div>
       ))}
       <div>
-        {promptEnabled && (
+        {running.promptEnabled && (
           <div
             onClick={() => {
               document.getElementById("test").focus();
             }}
           >
             <TermOutput cursorPosition={promptCursorPosition}>
-              {promptText + " " + prompt}
+              {running.prompt + " " + prompt}
             </TermOutput>
           </div>
         )}
