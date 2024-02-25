@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
 import Filesystem from "../../../tools/filesystem";
-import Neofetch from "./neofetch";
-import Ping from "./ping";
 import TermOutput from "./TermOutput";
-import Bash from "./bash";
-import Node from "./node";
-import Help from "./help";
+
+import Neofetch from "./terminalPrograms/neofetch";
+import Ping from "./terminalPrograms/ping";
+import Bash from "./terminalPrograms/bash";
+import Node from "./terminalPrograms/node";
+import Help from "./terminalPrograms/help";
 
 function Terminal({ setFilesystem, filesystem, onTop: currentOnTop, close }) {
   const onTop = useRef(currentOnTop);
