@@ -12,11 +12,9 @@ import Ls from "./programs/Ls";
 import Cd from "./programs/Cd";
 
 function Terminal({ setFilesystem, filesystem, onTop, close }) {
-  const [path, setPath] = useState("/home/");
-  const pathContent = Object.keys(
-    Filesystem.getPathContent(filesystem, path).content
-  );
+  const [path, setPath] = useState("/home/jack");
   const getDirName = (path) => {
+    if (Filesystem.getCleanPath(path) === "/home/jack") return "~";
     return Filesystem.parseTree(path).pop() || "/";
   };
 
@@ -43,7 +41,7 @@ function Terminal({ setFilesystem, filesystem, onTop, close }) {
   const node = new Node(print, defaultProgramExit);
   const neofetch = new Neofetch(print, defaultProgramExit);
   const help = new Help(print, defaultProgramExit);
-  const ls = new Ls(print, defaultProgramExit, filesystem, pathContent, path);
+  const ls = new Ls(print, defaultProgramExit, filesystem, path);
   const cd = new Cd(print, defaultProgramExit, filesystem, path, setPath);
   const programs = { ping, node, neofetch, help, ls, cd };
 

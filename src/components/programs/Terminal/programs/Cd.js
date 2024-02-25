@@ -7,17 +7,21 @@ class Cd extends Program {
 
     this.onStart = (args) => {
       let navigatePath = args[0];
-      if (!path.endsWith("/")) path += "/";
       if (!navigatePath) return exit();
+
+      let cleanPath = Filesystem.getCleanPath(path);
+      if (cleanPath !== "/") cleanPath += "/";
+
       if (navigatePath.startsWith("..")) {
-        const tree = path.split("/");
-        if (tree.length > 2)
-          navigatePath = path.split("/").slice(0, -2).join("/") + "/";
+        const tree = Filesystem.parseTree(path);
+        if (tree.length > 0)
+          navigatePath = "/" + tree.slice(0, -1).join("/") + "/";
         else return exit();
       }
       if (!navigatePath.startsWith("/")) {
-        navigatePath = path + navigatePath;
+        navigatePath = cleanPath + navigatePath;
       }
+
       const { pathExists } = Filesystem.getPathContent(
         filesystem,
         navigatePath

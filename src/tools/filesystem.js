@@ -3,6 +3,11 @@ const parseTree = (path) => {
   return parsedTree;
 };
 
+const getCleanPath = (path) => {
+  const parsedTree = parseTree(path);
+  return "/" + parsedTree.join("/");
+};
+
 const navigateToPath = (filesystem, path) => {
   const parsedTree = parseTree(path);
   let pathExists = true;
@@ -54,6 +59,7 @@ const Filesystem = {
   createInFileSystem,
   removeFromFileSystem,
   parseTree,
+  getCleanPath,
 };
 
 export const initialFilesystem = {
@@ -61,8 +67,21 @@ export const initialFilesystem = {
     home: {
       type: "directory",
       content: {
-        file: { type: "file", content: "Text file" },
-        directory: { type: "directory", content: {} },
+        jack: {
+          type: "directory",
+          content: {
+            file: { type: "file", content: "Text file" },
+            directory: { type: "directory", content: {} },
+            "hello-world.js": {
+              type: "file",
+              content: "console.log('Hello World!')",
+            },
+            "about-me.txt": {
+              type: "file",
+              content: "I'm Jack, a full-stack developer.",
+            },
+          },
+        },
       },
     },
   },
