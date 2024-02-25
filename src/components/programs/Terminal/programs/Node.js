@@ -25,7 +25,8 @@ class Node extends Program {
       );
 
       const codeLines = code.split(";").filter((line) => line.trim() !== "");
-      let lastLine = codeLines.pop().trim();
+      let lastLine = codeLines.pop() || "";
+      lastLine = lastLine.trim();
 
       const nonReturnable = [
         "for",
@@ -49,8 +50,6 @@ class Node extends Program {
       code = codeLines.join(";");
       code = code.replace(/\*\*\*/g, ";");
 
-      console.log(code);
-
       const evalFunction = new Function("console", `${code}`);
       return evalFunction({
         log: (msg) => {
@@ -63,6 +62,10 @@ class Node extends Program {
     this.promptEnabled = true;
     this.commandInterpreter = (command) => {
       output(this.prompt + " " + command);
+      if (command === "") {
+        return;
+      }
+
       if (command === "exit") {
         return exit();
       }
