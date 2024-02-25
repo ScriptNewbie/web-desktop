@@ -8,9 +8,10 @@ import Ping from "./programs/Ping";
 import Bash from "./programs/Bash";
 import Node from "./programs/Node";
 import Help from "./programs/Help";
+import Ls from "./programs/Ls";
+import Cd from "./programs/Cd";
 
 function Terminal({ setFilesystem, filesystem, onTop, close }) {
-  //Path handling - TODO
   const [path, setPath] = useState("/home/");
   const pathContent = Object.keys(
     Filesystem.getPathContent(filesystem, path).content
@@ -42,7 +43,10 @@ function Terminal({ setFilesystem, filesystem, onTop, close }) {
   const node = new Node(print, defaultProgramExit);
   const neofetch = new Neofetch(print, defaultProgramExit);
   const help = new Help(print, defaultProgramExit);
-  const programs = { ping, node, neofetch, help };
+  const ls = new Ls(print, defaultProgramExit, filesystem, pathContent, path);
+  const cd = new Cd(print, defaultProgramExit, filesystem, path, setPath);
+  const programs = { ping, node, neofetch, help, ls, cd };
+
   const startProgram = (program, args) => {
     setRunningProgram(program);
     program.onStart(args);
