@@ -8,6 +8,7 @@ class Node {
     this.prompt = "> ";
     this.promptEnabled = true;
     this.commandInterpreter = (command) => {
+      output(this.prompt + " " + command);
       if (command === "exit") {
         return exit();
       }

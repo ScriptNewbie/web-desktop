@@ -3,16 +3,13 @@ class Bash {
     this.prompt = "jack@zettawhit " + dirname + " #";
     this.promptEnabled = true;
     this.commandInterpreter = (command) => {
-      if (!command) return output("");
+      output(this.prompt + " " + command);
+      if (command === "") return;
       if (command === "clear") return clearTerminal();
       if (command === "exit") return exit();
-      //if (command === "ls") return ls();
-      //if (command.startsWith("cd")) return cd(command.split(" ")[1] || "/");
-      const executedLine = command.split(" ");
-      if (executedLine[0] in programs)
-        return startProgram(programs[executedLine[0]], executedLine.slice(1));
-
-      output("Command not found: " + executedLine[0]);
+      const [program, ...args] = command.split(" ");
+      if (program in programs) return startProgram(programs[program], args);
+      output("Command not found: " + program);
     };
 
     this.onStart = (args) => {};
