@@ -24,7 +24,7 @@ function Terminal({ setFilesystem, filesystem, onTop, close }) {
   const print = (text) => {
     setBashHistory((bashHistory) => [
       ...bashHistory,
-      <TermOutput>{text}</TermOutput>,
+      <TermOutput>{text.toString()}</TermOutput>,
     ]);
   };
   const promptContainer = useRef(null);
