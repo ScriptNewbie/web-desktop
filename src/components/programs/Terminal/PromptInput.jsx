@@ -2,7 +2,7 @@
 import TermOutput from "./TermOutput";
 import { useEffect, useRef, useState } from "react";
 
-function Prompt({ running, onTop: currentOnTop }) {
+function PromptInput({ running, onTop: currentOnTop }) {
   const [prompt, setPrompt] = useState("");
   const [promptToExecute, setPromptToExecute] = useState();
 
@@ -81,4 +81,4 @@ function Prompt({ running, onTop: currentOnTop }) {
   );
 }
 
-export default Prompt;
+export default PromptInput;

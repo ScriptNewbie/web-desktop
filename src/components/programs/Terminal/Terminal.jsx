@@ -1,13 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import Filesystem from "../../../tools/filesystem";
 import TermOutput from "./TermOutput";
-import Prompt from "./prompt";
+import PromptInput from "./PromptInput";
 
-import Neofetch from "./terminalPrograms/neofetch";
-import Ping from "./terminalPrograms/ping";
-import Bash from "./terminalPrograms/bash";
-import Node from "./terminalPrograms/node";
-import Help from "./terminalPrograms/help";
+import Neofetch from "./programs/Neofetch";
+import Ping from "./programs/Ping";
+import Bash from "./programs/Bash";
+import Node from "./programs/Node";
+import Help from "./programs/Help";
 
 function Terminal({ setFilesystem, filesystem, onTop, close }) {
   //Path handling
@@ -91,7 +91,7 @@ function Terminal({ setFilesystem, filesystem, onTop, close }) {
               hiddenInput.current.focus();
             }}
           >
-            <Prompt onTop={onTop} running={running} />
+            <PromptInput onTop={onTop} running={running} />
           </div>
         )}
       </div>
