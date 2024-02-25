@@ -1,10 +1,13 @@
+import Program from "./Program";
+
 function evalWithVariables(code) {
   const evalFunction = new Function(`return ${code}`);
   return evalFunction();
 }
 
-class Node {
+class Node extends Program {
   constructor(output, exit) {
+    super();
     this.prompt = "> ";
     this.promptEnabled = true;
     this.commandInterpreter = (command) => {

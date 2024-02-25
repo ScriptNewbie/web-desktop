@@ -1,5 +1,8 @@
-class Bash {
+import Program from "./Program";
+
+class Bash extends Program {
   constructor(output, exit, programs, startProgram, dirname, clearTerminal) {
+    super();
     this.prompt = "jack@zettawhit " + dirname + " #";
     this.promptEnabled = true;
     this.commandInterpreter = (command) => {
@@ -11,8 +14,6 @@ class Bash {
       if (program in programs) return startProgram(programs[program], args);
       output("Command not found: " + program);
     };
-
-    this.onStart = (args) => {};
   }
 }
 

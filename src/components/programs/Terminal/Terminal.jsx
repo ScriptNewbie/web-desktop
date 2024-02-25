@@ -10,7 +10,7 @@ import Node from "./programs/Node";
 import Help from "./programs/Help";
 
 function Terminal({ setFilesystem, filesystem, onTop, close }) {
-  //Path handling
+  //Path handling - TODO
   const [path, setPath] = useState("/home/");
   const pathContent = Object.keys(
     Filesystem.getPathContent(filesystem, path).content

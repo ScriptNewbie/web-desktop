@@ -1,8 +1,7 @@
-class Neofetch {
+import Program from "./Program";
+class Neofetch extends Program {
   constructor(output, exit) {
-    this.prompt = "";
-    this.promptEnabled = false;
-    this.commandInterpreter = (command) => {};
+    super();
     this.onStart = (args) => {
       const asciiart = `
                                jack@zettawhit.com

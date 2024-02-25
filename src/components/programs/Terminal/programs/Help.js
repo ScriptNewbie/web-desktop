@@ -1,9 +1,8 @@
-class Help {
-  constructor(output, exit) {
-    this.prompt = "";
-    this.promptEnabled = false;
-    this.commandInterpreter = (command) => {};
+import Program from "./Program";
 
+class Help extends Program {
+  constructor(output, exit) {
+    super();
     this.onStart = (args) => {
       output("Available commands:");
       output("   -exit\t - closes terminal");

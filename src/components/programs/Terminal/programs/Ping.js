@@ -1,3 +1,5 @@
+import Program from "./Program";
+
 const randomOctet = () => {
   return Math.round(Math.random() * 255);
 };
@@ -10,12 +12,9 @@ const randomIp = () => {
   return ip;
 };
 
-class Ping {
+class Ping extends Program {
   constructor(output, exit) {
-    this.prompt = "";
-    this.promptEnabled = false;
-    this.commandInterpreter = (command) => {};
-
+    super();
     this.onStart = (args) => {
       const ip = randomIp();
       if (!args[0]) {
