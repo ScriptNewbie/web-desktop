@@ -10,6 +10,8 @@ import Node from "./programs/Node";
 import Help from "./programs/Help";
 import Ls from "./programs/Ls";
 import Cd from "./programs/Cd";
+import Touch from "./programs/Touch";
+import Cat from "./programs/Cat";
 
 function Terminal({ setFilesystem, filesystem, onTop, close }) {
   const [path, setPath] = useState("/home/jack");
@@ -43,7 +45,15 @@ function Terminal({ setFilesystem, filesystem, onTop, close }) {
   const help = new Help(print, defaultProgramExit);
   const ls = new Ls(print, defaultProgramExit, filesystem, path);
   const cd = new Cd(print, defaultProgramExit, filesystem, path, setPath);
-  const programs = { ping, node, neofetch, help, ls, cd };
+  const cat = new Cat(print, defaultProgramExit, filesystem, path);
+  const touch = new Touch(
+    print,
+    defaultProgramExit,
+    path,
+    filesystem,
+    setFilesystem
+  );
+  const programs = { ping, node, neofetch, help, ls, cd, touch, cat };
 
   const startProgram = (program, args) => {
     setRunningProgram(program);

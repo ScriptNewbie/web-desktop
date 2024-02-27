@@ -32,6 +32,21 @@ const getPathContent = (filesystem, path) => {
   return { pathExists, content: current.path.content };
 };
 
+const getContent = (filesystem, path, name) => {
+  const filesystemCopy = JSON.parse(JSON.stringify(filesystem));
+  const current = { path: filesystemCopy };
+
+  const { pathExists: parentFolderExists } = navigateToPath(current, path);
+  let pathExists = false;
+  const object = current.path.content[name];
+  if (parentFolderExists && object) pathExists = true;
+  return {
+    pathExists,
+    isDirectory: current.path.content[name].type === "directory",
+    content: object.content,
+  };
+};
+
 const createInFileSystem = (filesystem, path, type, name, content = {}) => {
   const newFilesystem = JSON.parse(JSON.stringify(filesystem));
   const current = { path: newFilesystem };
@@ -60,6 +75,7 @@ const Filesystem = {
   removeFromFileSystem,
   parseTree,
   getCleanPath,
+  getContent,
 };
 
 export const initialFilesystem = {
