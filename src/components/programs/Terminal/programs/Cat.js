@@ -8,11 +8,8 @@ class Cat extends Program {
       let outputString = "";
       if (args.length > 0) {
         for (let arg of args) {
-          const { pathExists, isDirectory, content } = Filesystem.getContent(
-            filesystem,
-            path,
-            arg
-          );
+          const { pathExists, isDirectory, content } =
+            Filesystem.getPathContent(filesystem, path, arg);
           if (pathExists && !isDirectory) {
             outputString += content;
           } else {

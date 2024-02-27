@@ -10,8 +10,9 @@ class Touch extends Program {
           const { success, newFilesystem } = Filesystem.createInFileSystem(
             filesystem,
             path,
+            arg,
             "file",
-            arg
+            ""
           );
           if (success) {
             setFilesystem(newFilesystem);

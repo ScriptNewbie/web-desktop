@@ -5,7 +5,7 @@ import Icon from "./Icon";
 function MyComputer({ setFilesystem, filesystem }) {
   const { content } = Filesystem.getPathContent(filesystem, "/home");
   const [clicked, setClicked] = useState(null);
-  console.log(clicked);
+
   return (
     <div
       id="myComputerMainDiv"

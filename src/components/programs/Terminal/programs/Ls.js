@@ -7,27 +7,15 @@ class Ls extends Program {
 
     this.onStart = (args) => {
       let lsPath = args[0];
-      if (typeof lsPath === "undefined") {
-        const { pathExists, content } = Filesystem.getPathContent(
-          filesystem,
-          path
-        );
-        if (pathExists) output(Object.keys(content).join(" "));
-        return exit();
-      }
-      if (!lsPath.startsWith("/")) {
-        lsPath = path + lsPath;
-      }
-      const { pathExists, content } = Filesystem.getPathContent(
+
+      const { pathExists, isDirectory, content } = Filesystem.getPathContent(
         filesystem,
+        path,
         lsPath
       );
-      let result = "Path does not exist!";
-      if (pathExists) {
-        result = Object.keys(content).join(" ");
-      }
-      output(result);
-      exit();
+
+      if (pathExists && isDirectory) output(Object.keys(content).join(" "));
+      return exit();
     };
   }
 }

@@ -16,7 +16,7 @@ import Cat from "./programs/Cat";
 function Terminal({ setFilesystem, filesystem, onTop, close }) {
   const [path, setPath] = useState("/home/jack");
   const getDirName = (path) => {
-    if (Filesystem.getCleanPath(path) === "/home/jack") return "~";
+    if (path === "/home/jack") return "~";
     return Filesystem.parseTree(path).pop() || "/";
   };
 

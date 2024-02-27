@@ -3,9 +3,8 @@ const parseTree = (path) => {
   return parsedTree;
 };
 
-const getCleanPath = (path) => {
-  const parsedTree = parseTree(path);
-  return "/" + parsedTree.join("/");
+const pathFromTree = (tree) => {
+  return "/" + tree.join("/");
 };
 
 const navigateToPath = (filesystem, path) => {
@@ -24,45 +23,108 @@ const navigateToPath = (filesystem, path) => {
   return { pathExists };
 };
 
-const getPathContent = (filesystem, path) => {
-  const filesystemCopy = JSON.parse(JSON.stringify(filesystem));
-  const current = { path: filesystemCopy };
+const getFullPath = (currentFullPath, targetRelativeOrFullPath) => {
+  if (targetRelativeOrFullPath.startsWith("~")) {
+    targetRelativeOrFullPath = targetRelativeOrFullPath.replace(
+      "~",
+      "/home/jack"
+    );
+  }
+  if (targetRelativeOrFullPath.startsWith("/")) {
+    return targetRelativeOrFullPath;
+  }
+  console.log(targetRelativeOrFullPath);
+  const currentTree = parseTree(currentFullPath);
+  const targetTree = parseTree(targetRelativeOrFullPath);
+  for (let element of targetTree) {
+    if (element === "..") {
+      currentTree.pop();
+    } else if (element === ".") {
+      continue;
+    } else {
+      currentTree.push(element);
+    }
+  }
 
-  const { pathExists } = navigateToPath(current, path);
-  return { pathExists, content: current.path.content };
+  return "/" + currentTree.join("/");
 };
 
-const getContent = (filesystem, path, name) => {
+const getPathContent = (
+  filesystem,
+  currentFullPath,
+  targetRelativeOrFullPath = "."
+) => {
   const filesystemCopy = JSON.parse(JSON.stringify(filesystem));
   const current = { path: filesystemCopy };
+  const fullPath = getFullPath(currentFullPath, targetRelativeOrFullPath);
+  const parentDirectoryTree = parseTree(fullPath);
+  const name =
+    parentDirectoryTree.length > 0 ? parentDirectoryTree.pop() : null;
 
-  const { pathExists: parentFolderExists } = navigateToPath(current, path);
+  const { pathExists: parentFolderExists } = navigateToPath(
+    current,
+    pathFromTree(parentDirectoryTree)
+  );
+
   let pathExists = false;
-  const object = current.path.content[name];
+  const object = name ? current.path.content[name] : current.path;
   if (parentFolderExists && object) pathExists = true;
   return {
     pathExists,
-    isDirectory: current.path.content[name].type === "directory",
-    content: object.content,
+    fullPath,
+    isDirectory: object ? object.type === "directory" : null,
+    content: object ? object.content : null,
   };
 };
 
-const createInFileSystem = (filesystem, path, type, name, content = {}) => {
+const createInFileSystem = (
+  filesystem,
+  currentFullPath,
+  targetRelativeOrFullPath,
+  type,
+  content = {}
+) => {
   const newFilesystem = JSON.parse(JSON.stringify(filesystem));
   const current = { path: newFilesystem };
-  const { pathExists } = navigateToPath(current, path);
-  if (pathExists) {
-    current.path.content[name] = { content, type };
-  }
 
-  return { success: pathExists, newFilesystem };
+  const fullPath = getFullPath(currentFullPath, targetRelativeOrFullPath);
+  const parentDirectoryTree = parseTree(fullPath);
+  const name =
+    parentDirectoryTree.length > 1 ? parentDirectoryTree.pop() : null;
+
+  let success = false;
+  if (name) {
+    const { pathExists } = navigateToPath(
+      current,
+      pathFromTree(parentDirectoryTree)
+    );
+    if (pathExists) {
+      current.path.content[name] = { content, type };
+      success = true;
+    }
+  }
+  return { success, newFilesystem };
 };
 
-const removeFromFileSystem = (filesystem, path, name) => {
+const removeFromFileSystem = (
+  filesystem,
+  currentFullPath,
+  targetRelativeOrFullPath
+) => {
   const newFilesystem = JSON.parse(JSON.stringify(filesystem));
   const current = { path: newFilesystem };
-  const { pathExists } = navigateToPath(current, path);
-  if (pathExists) {
+
+  const fullPath = getFullPath(currentFullPath, targetRelativeOrFullPath);
+  const parentDirectoryTree = parseTree(fullPath);
+  const name =
+    parentDirectoryTree.length > 1 ? parentDirectoryTree.pop() : null;
+
+  const { pathExists } = navigateToPath(
+    current,
+    pathFromTree(parentDirectoryTree)
+  );
+
+  if (name && pathExists) {
     if (current.path.content[name]) delete current.path.content[name];
   }
 
@@ -74,11 +136,10 @@ const Filesystem = {
   createInFileSystem,
   removeFromFileSystem,
   parseTree,
-  getCleanPath,
-  getContent,
 };
 
 export const initialFilesystem = {
+  type: "directory",
   content: {
     home: {
       type: "directory",
