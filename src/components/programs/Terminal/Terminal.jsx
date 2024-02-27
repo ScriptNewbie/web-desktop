@@ -12,6 +12,7 @@ import Ls from "./programs/Ls";
 import Cd from "./programs/Cd";
 import Touch from "./programs/Touch";
 import Cat from "./programs/Cat";
+import Mkdir from "./programs/Mkdir";
 
 function Terminal({ setFilesystem, filesystem, onTop, close }) {
   const [path, setPath] = useState("/home/jack");
@@ -53,7 +54,15 @@ function Terminal({ setFilesystem, filesystem, onTop, close }) {
     filesystem,
     setFilesystem
   );
-  const programs = { ping, node, neofetch, help, ls, cd, touch, cat };
+  const mkdir = new Mkdir(
+    print,
+    defaultProgramExit,
+    path,
+    filesystem,
+    setFilesystem
+  );
+
+  const programs = { ping, node, neofetch, help, ls, cd, touch, cat, mkdir };
 
   const startProgram = (program, args) => {
     setRunningProgram(program);
