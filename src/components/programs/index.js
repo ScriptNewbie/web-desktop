@@ -5,11 +5,18 @@ import FreeBtc from "./FreeBtc";
 import Author from "./Author";
 import Chat from "./Chat";
 
+import myComputerIcon from "../../icons/computer.png";
+import terminalIcon from "../../icons/terminal.png";
+import skracaczIcon from "../../icons/shortcut.png";
+import chatIcon from "../../icons/chat.png";
+import btcIcon from "../../icons/btc.png";
+import authorIcon from "../../icons/author.png";
+
 const programs = [
   {
     id: 10,
     name: "Mój komputer",
-    icon: require("../../icons/computer.png"),
+    icon: myComputerIcon,
     component: MyComputer,
     width: 400,
     height: 100,
@@ -20,7 +27,7 @@ const programs = [
   {
     id: 13,
     name: "Terminal",
-    icon: require("../../icons/terminal.png"),
+    icon: terminalIcon,
     component: Terminal,
     width: 600,
     height: 300,
@@ -31,7 +38,7 @@ const programs = [
   {
     id: 15,
     name: "Skracacz linków",
-    icon: require("../../icons/shortcut.png"),
+    icon: skracaczIcon,
     component: Skracacz,
     width: 800,
     height: 470,
@@ -42,7 +49,7 @@ const programs = [
   {
     id: 20,
     name: "Czat",
-    icon: require("../../icons/chat.png"),
+    icon: chatIcon,
     component: Chat,
     width: 960,
     height: 540,
@@ -51,7 +58,7 @@ const programs = [
   {
     id: 30,
     name: "Darmowe Bitkojny",
-    icon: require("../../icons/btc.png"),
+    icon: btcIcon,
     component: FreeBtc,
     width: 960,
     height: 540,
@@ -60,7 +67,7 @@ const programs = [
   {
     id: 40,
     name: "Strona autora",
-    icon: require("../../icons/author.png"),
+    icon: authorIcon,
     component: Author,
     width: 960,
     height: 540,

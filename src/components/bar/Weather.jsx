@@ -1,5 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import owmImg from "./owm.png";
+import secrets from "../../secrets";
 
 function Weather() {
   const [city, setCity] = useState("Katowice");
@@ -9,7 +11,7 @@ function Weather() {
   const [osmAttribution, setOsmAttribution] = useState("");
 
   //API KEY IS STILL BUNDLED SO PROCEED WITH CAUTION
-  const key = process.env.REACT_APP_API_KEY;
+  const key = secrets.weather;
 
   const geoCode = async (city) => {
     const query =
@@ -143,7 +145,7 @@ function Weather() {
       </div>
       Weather data provided by{" "}
       <a href="https://openweathermap.org/">OpenWeather</a>
-      <img style={{ height: "2em" }} src={require("./owm.png")} />
+      <img style={{ height: "2em" }} src={owmImg} />
       <br />
       {osmAttribution}
     </div>
