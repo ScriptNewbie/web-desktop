@@ -3,7 +3,6 @@ import Terminal from "./Terminal";
 import Skracacz from "./Skracacz";
 import FreeBtc from "./FreeBtc";
 import Author from "./Author";
-import Chat from "./Chat";
 
 import myComputerIcon from "../../icons/computer.png";
 import terminalIcon from "../../icons/terminal.png";
@@ -36,24 +35,15 @@ const programs = [
     allowMultipleInstances: true,
   },
   {
-    id: 15,
+    id: 20,
     name: "Skracacz linków",
     icon: skracaczIcon,
     component: Skracacz,
     width: 800,
-    height: 470,
+    height: 460,
     minWidth: 480,
     minHeight: 270,
     allowMultipleInstances: false,
-  },
-  {
-    id: 20,
-    name: "Czat",
-    icon: chatIcon,
-    component: Chat,
-    width: 960,
-    height: 540,
-    allowMultipleInstances: true,
   },
   {
     id: 30,
