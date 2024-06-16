@@ -10,7 +10,7 @@ function Weather() {
   const [osmAttribution, setOsmAttribution] = useState("");
 
   //API KEY IS STILL BUNDLED SO PROCEED WITH CAUTION
-  const key = import.meta.env.WEATHER_API_KEY;
+  const key = import.meta.env.VITE_WEATHER_API_KEY;
 
   const geoCode = async (city) => {
     const query =
