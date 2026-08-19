@@ -44,7 +44,7 @@ const pathFromTree = (tree: string[]): string => {
 };
 
 const cloneFilesystem = (filesystem: DirectoryNode): DirectoryNode => {
-  return JSON.parse(JSON.stringify(filesystem)) as DirectoryNode;
+  return structuredClone(filesystem);
 };
 
 const navigateToPath = (

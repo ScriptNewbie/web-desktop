@@ -50,14 +50,13 @@ class Node extends Program {
       code = codeLines.join(";");
       code = code.replace(/\*\*\*/g, ";");
 
-      const evalFunction = new Function("console", `${code}`) as (
-        consoleObj: { log: (msg: unknown) => void }
-      ) => unknown;
-      return evalFunction({
-        log: (msg) => {
+      const compiled = new Function("console", `${code}`);
+      const result: unknown = compiled.call(undefined, {
+        log: (msg: unknown) => {
           output("  " + String(msg));
         },
       });
+      return result;
     };
 
     this.prompt = ">";

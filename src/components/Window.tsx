@@ -16,6 +16,27 @@ type ResizeDirection =
   | "resizeLeftTop"
   | "resizeRightTop";
 
+function resizeDirectionFromEdges(
+  right: boolean,
+  left: boolean,
+  top: boolean,
+  bottom: boolean
+): ResizeDirection | null {
+  if (right) {
+    if (top) return "resizeRightTop";
+    if (bottom) return "resizeRightBottom";
+    return "resizeRight";
+  }
+  if (left) {
+    if (top) return "resizeLeftTop";
+    if (bottom) return "resizeLeftBottom";
+    return "resizeLeft";
+  }
+  if (top) return "resizeTop";
+  if (bottom) return "resizeBottom";
+  return null;
+}
+
 type WindowProps = {
   onTop: boolean;
   changeOnTopRunning: (pid: number) => void;
@@ -114,21 +135,19 @@ function Window({
   }
 
   function handleResizeMouseClick(event: PointerEvent<HTMLDivElement>) {
-    document.body.style.userSelect = "none";
     const right = event.nativeEvent.offsetX > width - 10;
     const bottom = event.nativeEvent.offsetY > height + 40 - 10;
     const left = event.nativeEvent.offsetX < 10;
     const top = event.nativeEvent.offsetY < 10;
 
     if (!fullscreen) {
-      setResizeDirection(
-        ("resize" +
-          (right ? "Right" : "") +
-          (left ? "Left" : "") +
-          (top ? "Top" : "") +
-          (bottom ? "Bottom" : "")) as ResizeDirection
-      );
+      const direction = resizeDirectionFromEdges(right, left, top, bottom);
+      if (!direction) {
+        return;
+      }
 
+      document.body.style.userSelect = "none";
+      setResizeDirection(direction);
       blockIframe();
       setStartClick({ x: event.clientX, y: event.clientY });
       setStartWH({ width: width, height: height });
