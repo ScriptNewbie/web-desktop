@@ -2,13 +2,11 @@ import MyComputer from "./MyComputer";
 import Terminal from "./Terminal";
 import Skracacz from "./Skracacz";
 import FreeBtc from "./FreeBtc";
-import Author from "./Author";
 
 import myComputerIcon from "../../icons/computer.png";
 import terminalIcon from "../../icons/terminal.png";
 import skracaczIcon from "../../icons/shortcut.png";
 import btcIcon from "../../icons/btc.png";
-import authorIcon from "../../icons/author.png";
 import type { DesktopProgram } from "../../types";
 
 const programs: DesktopProgram[] = [
@@ -53,15 +51,6 @@ const programs: DesktopProgram[] = [
     width: 960,
     height: 540,
     allowMultipleInstances: true,
-  },
-  {
-    id: 40,
-    name: "Strona autora",
-    icon: authorIcon,
-    component: Author,
-    width: 960,
-    height: 540,
-    allowMultipleInstances: false,
   },
 ];
 
